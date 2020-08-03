@@ -1,3 +1,7 @@
 fn main() {
-    println!("Hello, world!");
+    println!("{}", fill_word());
+}
+
+fn fill_word() -> &'static str {
+    "Hello"
 }
