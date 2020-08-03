@@ -5,8 +5,7 @@ fn main() {
 fn separate_sentence(sentence: String) -> String {
     let split_sentence: Vec<&str> = sentence.split_whitespace().collect();
     fill_word();
-    let new_sentence: String = split_sentence.into_iter().collect();
-    new_sentence
+    split_sentence.into_iter().collect()
 }
 
 fn fill_word() -> &'static str {
