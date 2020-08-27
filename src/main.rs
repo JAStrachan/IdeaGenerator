@@ -1,3 +1,4 @@
+use rand::Rng;
 use regex::Regex;
 
 fn main() {
@@ -18,7 +19,14 @@ fn separate_sentence(sentence: String) -> String {
 
 fn fill_word(type_of_word: &str) -> &'static str {
     match type_of_word {
-        "@noun" => "hospital",
+        "@noun" => random_noun(),
         _ => "Not a templated character",
     }
+}
+
+fn random_noun() -> &'static str {
+    let mut rng = rand::thread_rng();
+    let list_of_nouns = vec!["thing", "hospital", "monkey", "banana"];
+    let random_number = rng.gen_range(0, list_of_nouns.len());
+    return list_of_nouns[random_number];
 }
