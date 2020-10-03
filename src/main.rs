@@ -6,17 +6,21 @@ use std::fs;
 fn main() {
     println!(
         "{}",
-        separate_sentence(String::from("Help I need to run to that @building"))
+        separate_sentence(String::from(
+            "Help I need to run to that , @verb, , @building, help"
+        ))
     );
 }
 
+// Doesn't work on multiple tokens because it doesn't relevaluate where the next token is. Do I have to build a AST?????
 fn separate_sentence(sentence: String) -> String {
     let mut new_sentence = sentence.clone();
 
     for mat in Regex::new(r"@\w*").unwrap().find_iter(&sentence) {
         let word = &sentence[mat.start()..mat.end()];
         let new_word = fill_word(word);
-        new_sentence.replace_range(mat.range(), &new_word)
+
+        new_sentence.replace_range(mat.range(), &new_word);
     }
 
     new_sentence
@@ -24,20 +28,21 @@ fn separate_sentence(sentence: String) -> String {
 
 fn fill_word(type_of_word: &str) -> String {
     match type_of_word {
-        "@building" => random_buildings(),
+        "@building" => random_word("buildings.txt"),
+        "@verb" => random_word("verbs.txt"),
         _ => String::from("Not a templated character"),
     }
 }
 
-fn random_buildings() -> String {
-    let contents = read_file("buildings.txt").expect("Problem with reading the file");
+fn random_word(filename: &str) -> String {
+    let contents = read_file(filename).expect("Problem with reading the file");
 
-    let mut list_of_buildings = Vec::new();
+    let mut words = Vec::new();
     for line in contents.lines() {
-        list_of_buildings.push(line);
+        words.push(line);
     }
 
-    choose_random_word(list_of_buildings)
+    choose_random_word(words)
 }
 
 fn choose_random_word(list_of_words: Vec<&str>) -> String {
