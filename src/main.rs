@@ -14,18 +14,23 @@ fn main() {
 
 // Does work for two  + possi more @symbols but doesn't get the last part of the sentence after the last symbol
 fn separate_sentence(sentence: String) -> String {
-    let mut ast: Vec<&str> = Vec::new();
+    let ast = build_ast(sentence);
+
+    let new_sentence_ast: Vec<String> = ast.into_iter().map(|word| fill_word(&word)).collect();
+    new_sentence_ast.into_iter().map(|i| i).collect::<String>()
+}
+
+fn build_ast(sentence: String) -> Vec<String> {
+    let mut ast: Vec<String> = Vec::new();
     let mut last_index = 0;
 
     for mat in Regex::new(r"@\w*").unwrap().find_iter(&sentence) {
-        ast.push(&sentence[last_index..mat.start()]);
-        ast.push(&sentence[mat.start()..mat.end()]);
+        ast.push(String::from(&sentence[last_index..mat.start()]));
+        ast.push(String::from(&sentence[mat.start()..mat.end()]));
         last_index = mat.end();
     }
-    ast.push(&sentence[last_index..sentence.len()]);
-
-    let new_sentence_ast: Vec<String> = ast.into_iter().map(|word| fill_word(word)).collect();
-    new_sentence_ast.into_iter().map(|i| i).collect::<String>()
+    ast.push(String::from(&sentence[last_index..sentence.len()]));
+    ast
 }
 
 fn fill_word(type_of_word: &str) -> String {
