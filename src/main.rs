@@ -7,12 +7,14 @@ fn main() {
     println!(
         "{}",
         separate_sentence(String::from(
-            "Help I need to run to that , @verb, , @building, help goodness me I need another @verb to test out"
+            "Help I need to run to that , @verbs, , @buildings, help goodness me I need another @verbs to test out"
         ))
     );
 }
 
-// Does work for two  + possi more @symbols but doesn't get the last part of the sentence after the last symbol
+//TODO need to add better error handling so it can be handled in the part that spits back out to the UI
+//Write better names for the functions
+//seoarate_sentences will be the main entry point to the library so probably name it idea_generator
 fn separate_sentence(sentence: String) -> String {
     let ast = build_ast(sentence);
 
@@ -34,10 +36,12 @@ fn build_ast(sentence: String) -> Vec<String> {
 }
 
 fn fill_word(type_of_word: &str) -> String {
-    match type_of_word {
-        "@building" => random_word("buildings.txt"),
-        "@verb" => random_word("verbs.txt"),
-        _ => String::from(type_of_word),
+    if &type_of_word[0..1] == "@" {
+        let file_name = String::from(&type_of_word[1..type_of_word.len()]) + ".txt";
+        println!("Opening {}", file_name);
+        random_word(&file_name)
+    } else {
+        String::from(type_of_word)
     }
 }
 
